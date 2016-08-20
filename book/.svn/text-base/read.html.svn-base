@@ -1,0 +1,432 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../css/mui.min.css" rel="stylesheet" />
+		<script type="text/javascript" src="../js/html5sql.js" ></script>
+		<script type="text/javascript" src="../js/zszj_db.js" ></script>
+		<script type="text/javascript" src="../js/zszj_util.js" ></script>
+		<script type="text/javascript" src="../js/zszj_loalstore.js" ></script>
+	</head>
+
+	<style type="text/css">
+		body {
+			background-color: rgb(199, 237, 204);
+			font-size: 18px;
+			line-height: 24px;
+		}
+	</style>
+
+	<body>
+		<div class="mui-content">
+
+			<div id="content" style="background-color: rgb(199,237,204);padding:5px;height:100% ; width:100%; position:absolute;-webkit-user-select: text;"></div>
+		</div>
+
+		<div id="menu">
+			<nav class="mui-bar mui-bar-tab" id="footer" style="opacity: 1.0;display: none;">
+				<ul>
+					<a class="mui-tab-item mui-active" id="font">
+						<span class="mui-icon mui-icon-compose"></span>
+						<span class="mui-tab-label">字体</span>
+					</a>
+					<a class="mui-tab-item" id="style">
+						<span class="mui-icon mui-icon-chatboxes"></span>
+						<span class="mui-tab-label">阅读风格</span>
+					</a>
+					<a class="mui-tab-item" id="light">
+						<span class="mui-icon mui-icon-settings"></span>
+						<span class="mui-tab-label">亮度调节</span>
+					</a>
+					<a class="mui-tab-item mui-active" id="auto">
+						<span class="mui-icon mui-icon-forward"></span>
+						<span class="mui-tab-label" id="autotext">自动阅读</span>
+					</a>
+
+				</ul>
+				<ul>
+					<a class="mui-tab-item mui-active" id="categ">
+						<span class="mui-icon mui-icon-list"></span>
+						<span class="mui-tab-label">目录</span>
+					</a>
+					<a class="mui-tab-item" id="prog">
+						<span class="mui-icon mui-icon-redo"></span>
+						<span class="mui-tab-label">进度跳转</span>
+					</a>
+					<a class="mui-tab-item" id="reverse">
+						<span class="mui-icon mui-icon-spinner mui-spin"></span>
+						<span class="mui-tab-label" id="readDir">横屏阅读</span>
+					</a>
+					<a class="mui-tab-item mui-active" id="more">
+						<span class="mui-icon mui-icon-gear"></span>
+						<span class="mui-tab-label">更多设置</span>
+					</a>
+
+				</ul>
+			</nav>
+			<!--字体-->
+			<nav class="mui-bar mui-bar-tab" id="textfont" style="opacity: 0.8;display: none;">
+
+				<a class="mui-tab-item mui-active" id="small"><span class="mui-tab-label">小</span></a>
+				<a class="mui-tab-item mui-active" id="middle"><span class="mui-tab-label">中</span></a>
+				<a class="mui-tab-item mui-active" id="big"><span class="mui-tab-label">大</span></a>
+
+			</nav>
+			<!--阅读风格-->
+			<nav class="mui-bar mui-bar-tab" id="readstyle" style="opacity: 0.8;display: none;">
+				<a class="mui-tab-item mui-active" id="zhi"><span class="mui-tab-label">米黄色</span></a>
+				<a class="mui-tab-item mui-active" id="night"><span class="mui-tab-label">护眼色</span></a>
+			</nav>
+			<!--亮度调节-->
+			<nav class="mui-bar mui-bar-tab" id="lightset" style="opacity: 0.8;display: none;">
+				<div class="mui-input-row mui-input-range">
+					<label>亮度</label>
+					<input type="range" min="0" max="100" onchange="lightrange()" id="range">
+				</div>
+			</nav>
+
+			<!--进度跳转-->
+			<nav class="mui-bar mui-bar-tab" id="progress" style="opacity: 0.8;display: none;">
+				<div class="mui-input-row mui-input-range">
+					<label>进度</label>
+					<input type="range" min="0" max="100" onchange="goprog()" id="progValue">
+				</div>
+			</nav>
+		</div>
+	</body>
+	<script src="../js/mui.min.js"></script>
+	<script type="text/javascript">
+		var sort; 
+		mui.init();
+		var self;
+		mui.plusReady(function() {
+			self= plus.webview.currentWebview();
+			sort = self.sort;
+//			alert(self.bookSort);
+			mui.scrollTo(0,1);
+				openDB();
+				createTable();
+				if(eval ("(" + plus.storage.getItem(self.bookName) + ")")==null){
+				mui.ajax(getServerHost()+"/getContentByNameAndSort/"+self.bookName+"/"+sort,{
+					dataType:'html',//服务器返回json格式数据
+					type:'get',//HTTP请求类型
+					timeout:10000,//超时时间设置为10秒；changeTwoDecimal_f
+					async:true,
+					success:function(data){					
+						var table =  document.body.querySelector('.mui-table-view');
+						data = eval ("(" + data + ")");
+						document.getElementById("content").innerHTML  = "["+data.chapterName+"] ["+data.sectionName+"]<br />"+data.sectionContent;
+						//alert(self.bookSort);
+						insertBookData(self.bookName,self.bookIntro,self.bookSort);
+						downloadBook(self.bookName);	
+					},
+					error:function(xhr,type,errorThrown){
+						console.log(type);
+						alert("请检查您的设备是否连接至互联网！");
+					}
+				});
+				}else{
+					var d = eval ("(" + plus.storage.getItem(self.bookName) + ")");
+					document.getElementById("content").innerHTML  =  "["+d[sort-1].chapterName+"] ["+d[sort-1].sectionName+"]<br />"+d[sort-1].sectionContent;
+					insertBookData(self.bookName,self.bookIntro,self.bookSort);
+				}
+			var contentDiv = document.getElementById('content');
+		
+			contentDiv.addEventListener("swipeleft",function(){
+				//alert(sort);
+				document.getElementById("content").innerHTML = "";
+				sort = parseInt(sort)+1;
+				var d = eval ("(" + plus.storage.getItem(self.bookName) + ")");
+					document.getElementById("content").innerHTML  =  "["+d[sort-1].chapterName+"] ["+d[sort-1].sectionName+"]<br />"+d[sort-1].sectionContent;
+					//alert( d[sort-1].sectionContent);
+			});	
+			
+			contentDiv.addEventListener("swiperight",function(){
+				document.getElementById("content").innerHTML = "";
+				if(sort ==1){
+					mui.alert("您在阅读的是第一页！");
+					return ;
+				}
+				sort = parseInt(sort) -1;
+				var d = eval ("(" + plus.storage.getItem(self.bookName) + ")");
+					document.getElementById("content").innerHTML  =  "["+d[sort-1].chapterName+"] ["+d[sort-1].sectionName+"]<br />"+d[sort-1].sectionContent;
+					
+//	     		mui.ajax(getServerHost()+"/getContentByNameAndSort/"+self.bookName+"/"+sort,{
+//					dataType:'html',//服务器返回json格式数据
+//					type:'get',//HTTP请求类型
+//					timeout:10000,//超时时间设置为10秒；changeTwoDecimal_f
+//					async:false,
+//					success:function(data){					
+//						var table =  document.body.querySelector('.mui-table-view');
+//						data = eval ("(" + data + ")");
+//						document.getElementById("content").innerHTML  = data.sectionContent;
+//					},
+//					error:function(xhr,type,errorThrown){
+//						console.log(type);
+//						alert("请检查您的设备是否连接至互联网！");
+//					}
+//				});
+			});	
+
+			var masterFlag = 0;
+			var subFlag = 0;
+
+			document.getElementById("content").addEventListener("tap", function() {
+				/*		alert(masterFlag);
+						alert(subFlag);*/
+				if(masterFlag == 0 && subFlag == 0) {
+					/*var child = document.getElementById("menu").children;
+					for(var i = 0, len = child.length; i < len; i++) {
+						child[i].style.display = "none";
+					}*/
+					/*			document.getElementById("progress").style.display = "none";
+								document.getElementById("lightset").style.display = "none";*/
+					document.getElementById("menu").style.display = "";
+					document.getElementById("footer").style.display = "";
+					masterFlag = 1;
+
+				} else if(masterFlag == 1 && subFlag == 0) {
+					document.getElementById("menu").style.display = "none";
+					document.getElementById("footer").style.display = "none";
+					masterFlag = 0;
+					subFlag = 0;
+
+				}
+				if(masterFlag == 4) {
+
+					document.getElementById("menu").style.display = "none";
+					document.getElementById("footer").style.display = "none";
+
+					var child = document.getElementById("menu").children;
+					for(var i = 0, len = child.length; i < len; i++) {
+						child[i].style.display = "none";
+					}
+
+					masterFlag = 0;
+					subFlag = 0;
+				}
+
+			});
+			//字体
+			document.getElementById("font").addEventListener("tap", function() {
+				subFlag = 1;
+				document.getElementById("footer").style.display = "none";
+				document.getElementById("textfont").style.display = "";
+				masterFlag = 4;
+				document.getElementById("small").addEventListener("tap", function() {
+
+					document.getElementById("footer").style.display = "none";
+					document.getElementById("content").style.fontSize = '14px';
+					document.getElementById("content").style.lineHeight = '20px';
+					document.getElementById("textfont").style.display = "none";
+					subFlag = 0;
+					masterFlag = 0;
+				});
+
+				document.getElementById("middle").addEventListener("tap", function() {
+
+					document.getElementById("footer").style.display = "none";
+					document.getElementById("content").style.fontSize = '18px';
+					document.getElementById("content").style.lineHeight = '24px';
+					document.getElementById("textfont").style.display = "none";
+					subFlag = 0;
+					masterFlag = 0;
+				});
+
+				document.getElementById("big").addEventListener("tap", function() {
+
+					document.getElementById("footer").style.display = "none";
+					document.getElementById("content").style.fontSize = '22px';
+					document.getElementById("content").style.lineHeight = '30px';
+					document.getElementById("textfont").style.display = "none";
+					subFlag = 0;
+					masterFlag = 0;
+				});
+
+			});
+
+			//阅读风格
+			document.getElementById("style").addEventListener("tap", function() {
+				document.getElementById("footer").style.display = "none";
+				document.getElementById("readstyle").style.display = "";
+				subFlag = 1;
+				masterFlag = 4;
+				document.getElementById("zhi").addEventListener("tap", function() {
+
+					document.getElementById("footer").style.display = "none";
+					document.getElementById("content").style.backgroundColor = "rgb(255,255,204)";
+					document.body.style.backgroundColor = "rgb(255,255,204)";
+					document.getElementById("readstyle").style.display = "none";
+					subFlag = 0;
+					masterFlag = 0;
+				});
+
+				document.getElementById("night").addEventListener("tap", function() {
+
+					document.getElementById("footer").style.display = "none";
+					document.getElementById("content").style.backgroundColor = "rgb(199,237,204)";
+					document.body.style.backgroundColor = "rgb(199,237,204)";
+					document.getElementById("readstyle").style.display = "none";
+					subFlag = 0;
+					masterFlag = 0;
+				});
+
+			});
+			//亮度调节
+			document.getElementById("light").addEventListener("tap", function() {
+				document.getElementById("footer").style.display = "none";
+
+				document.getElementById("lightset").style.display = "";
+				subFlag = 0;
+
+				masterFlag = 4;
+			});
+
+			//屏幕方向
+			var Oriflag = 0;
+			document.getElementById("reverse").addEventListener("tap", function() {
+				document.getElementById("footer").style.display = "none";
+				if(Oriflag == 0) {
+					plus.screen.lockOrientation("landscape-primary");
+					document.getElementById("readDir").innerHTML = "竖屏阅读";
+					Oriflag = 1;
+				} else if(Oriflag == 1) {
+					plus.screen.lockOrientation("portrait-primary");
+					document.getElementById("readDir").innerHTML = "横屏阅读";
+					Oriflag = 0;
+				}
+
+				subFlag = 0;
+				masterFlag = 0;
+			});
+
+			//自动阅读
+			var readflag = 0; //自动阅读标志 0关1开
+			var readProcess;
+			var count = 1;
+			var jump = window.parseInt(window.innerHeight / 100);
+
+			document.getElementById("auto").addEventListener("tap", function() {
+				count = 1;
+				document.getElementById("footer").display = "none";
+				document.getElementById("autotext").innerHTML = "退出自动阅读";
+				masterFlag = 4;
+				if(readflag == 0) {
+					document.getElementById("autotext").innerHTML = "退出自动阅读";
+
+					readProcess = window.setInterval(function() {
+						/*alert(count);
+						alert(getScrollTop());
+						alert(getWindowHeight());
+						alert(getScrollHeight());*/
+						if(getScrollTop() + getWindowHeight() < getScrollHeight()) {
+							document.getElementById("autotext").innerHTML = "退出自动阅读";
+							window.scrollTo(0, jump * 100 * count);
+							count++;
+
+						} else {
+							/*	alert("end");*/
+							clearInterval(readProcess);
+							document.getElementById("autotext").innerHTML = "自动阅读";
+							readflag = 0;
+						}
+					}, 3000);
+
+					readflag = 1;
+				} else if(readflag == 1) {
+
+					document.getElementById("autotext").innerHTML = "自动阅读";
+					clearInterval(readProcess);
+					document.getElementById("footer").display = "none";
+					readflag = 0;
+
+				}
+			});
+
+			//进度
+			document.getElementById("prog").addEventListener("tap", function() {
+				document.getElementById("progress").style.display = "";
+				document.getElementById("footer").style.display = "none";
+				masterFlag = 4;
+				subFlag = 0;
+
+			});
+			document.getElementById("categ").addEventListener("tap", function() {
+				
+				document.getElementById("footer").style.display = "none";
+				masterFlag = 4;
+				subFlag = 0;
+				openCateg();
+			});
+		});
+
+		//滚动条在Y轴上的滚动距离  
+		function getScrollTop() {　　
+			var scrollTop = 0,
+				bodyScrollTop = 0,
+				documentScrollTop = 0;　　
+			if(document.body) {　　　　
+				bodyScrollTop = document.body.scrollTop;　　
+			}　　
+			if(document.documentElement) {　　　　
+				documentScrollTop = document.documentElement.scrollTop;　　
+			}　　
+			scrollTop = (bodyScrollTop - documentScrollTop > 0) ? bodyScrollTop : documentScrollTop;　　
+			return scrollTop;
+		}
+		//文档的总高度 
+		function getScrollHeight() {　　
+			var scrollHeight = 0,
+				bodyScrollHeight = 0,
+				documentScrollHeight = 0;　　
+			if(document.body) {　　　　
+				bodyScrollHeight = document.body.scrollHeight;　　
+			}　　
+			if(document.documentElement) {　　　　
+				documentScrollHeight = document.documentElement.scrollHeight;　　
+			}　　
+			scrollHeight = (bodyScrollHeight - documentScrollHeight > 0) ? bodyScrollHeight : documentScrollHeight;　　
+			return scrollHeight;
+		}
+		//浏览器视口的高度 
+		function getWindowHeight() {　　
+			var windowHeight = 0;　　
+			if(document.compatMode == "CSS1Compat") {　　　　
+				windowHeight = document.documentElement.clientHeight;　　
+			} else {　　　　
+				windowHeight = document.body.clientHeight;　　
+			}　　
+			return windowHeight;
+		}
+
+		function goprog() {
+			var go = document.getElementById("progValue").value;
+			subFlag = 1;
+			window.scrollTo(0, go / 100 * (getScrollHeight() - getWindowHeight()));
+
+		}
+
+		function lightrange() {
+			var range = document.getElementById("range").value;
+			subFlag = 1;
+			plus.screen.setBrightness(range / 100);
+
+		}
+		
+		//打开图书目录
+		function openCateg(){
+			//alert(self.bookName);
+			  mui.openWindow({
+   				url: 'categ.html',	
+   				extras:{
+   					bookName:self.bookName
+   				},
+   				
+  			});
+		}
+	</script>
+
+</html>

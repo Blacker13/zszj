@@ -1,0 +1,117 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../css/mui.min.css" rel="stylesheet" />
+		
+	</head>
+
+	<body>
+		<script src="../js/mui.min.js"></script>
+		<script type="text/javascript" src="../js/html5sql.js" ></script>
+		<script type="text/javascript" src="../js/zszj_db.js" ></script>
+		<script type="text/javascript" src="../js/zszj_util.js" ></script>
+		<script type="text/javascript" src="../js/zszj_loalstore.js" ></script>
+		<script type="text/javascript">
+			mui.init();
+			var self;
+			mui.plusReady(function(){
+				self = plus.webview.currentWebview();
+			mui.ajax(getServerHost()+"/bookCatalog/西安年鉴2001",{				
+					dataType:'html',//服务器返回json格式数据
+					type:'get',//HTTP请求类型
+					timeout:10000,//超时时间设置为10秒；
+					async:false,
+					success:function(data){
+						var table =  document.body.querySelector('.mui-table-view');
+						data = eval ("(" + data + ")");
+						//alert(data.length);
+						data = data.jsonStr;
+						data = eval ("(" + data + ")");
+					for(i=0;i<data.obj.length;++i){
+								var li = document.createElement('li');
+							var catalogName = data.obj[i].catalogName+"";
+							li.className = 'mui-table-view-cell mui-collapse';
+							var ul_content= '<ul class="mui-table-view mui-table-view-chevron">';
+						mui.ajax(getServerHost()+"/bookCatalog2/"+self.bookName+"/"+catalogName,{				
+					dataType:'html',//服务器返回json格式数据
+					type:'get',//HTTP请求类型
+					timeout:10000,//超时时间设置为10秒；
+					async:false,
+					success:function(data2){
+						data2 = eval ("(" + data2 + ")");
+						//alert(data.length);
+						data2 = data2.jsonStr;
+						data2 = eval ("(" + data2 + ")");
+						for(j=0;j<data2.obj.length;++j){
+							var catalogName2 = data2.obj[j].catalogName+"";
+							var sectionSort = data2.obj[j].sectionSort+"";
+							//alert(catalogName2);
+							var t = '<li class="mui-table-view-cell"><a class="mui-navigate-right" onclick="openCateg(\''+catalogName2+'\',\''+sectionSort+'\')">'+catalogName2+'</a></li>'
+							ul_content = ul_content + t;
+						}
+					}
+					});
+						//alert(data.obj[0].catalogName);
+						ul_content = ul_content+'</ul>';
+								
+							//li.onclick = 'openT()';
+							li.innerHTML = '<a class="mui-navigate-right" >'+
+							catalogName+
+							'</a>'
+							+ul_content;
+						table.appendChild(li);
+						}
+					},
+					error:function(xhr,type,errorThrown){
+						console.log(type);
+						alert("请检查您的设备是否连接至互联网！");
+					}
+				});
+			});
+		</script>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">目录</h1>
+		</header>
+	<div class="mui-content">
+		<div class="mui-card">
+		<ul class="mui-table-view mui-table-view-chevron">
+		</ul>
+		</div>
+	</div>
+	</body>
+<script>
+	function openCateg(categName,sectionSort){
+		//alert(sectionSort);
+		mui.openWindow({
+					url: 'read.html',
+					extras: {
+						bookName: self.bookName,
+						bookIntro:"",
+						sort:sectionSort,
+					},
+					createNew:true
+				});
+	}
+	
+	window.addEventListener('toggle', function(event) {
+			if (event.target.id === 'M_Toggle') {
+				var isActive = event.detail.isActive;
+				var table = document.querySelector('.mui-table-view');
+				var card = document.querySelector('.mui-card');
+				if (isActive) {
+					card.appendChild(table);
+					card.style.display = '';
+				} else {
+					var content = document.querySelector('.mui-content');
+					content.insertBefore(table, card);
+					card.style.display = 'none';
+				}
+			}
+		});
+</script>
+</html>

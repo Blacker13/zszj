@@ -1,0 +1,59 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../css/mui.min.css" rel="stylesheet" />
+		<script type="text/javascript" src="../js/zszj_db.js" ></script>
+		<script type="text/javascript" src="../js/html5sql.js" ></script>
+		<script type="text/javascript" src="../js/zszj_util.js" ></script>
+	</head>
+
+	<body>
+		<script src="../js/mui.min.js"></script>
+		<script type="text/javascript">
+			mui.init();
+			mui.plusReady(function(){
+				var self = plus.webview.currentWebview();
+//				openDB();
+//				createTable();
+//				insertBookData(self.bookName,self.bookContent);
+//				loadData(self.bookName);
+				mui.ajax(getServerHost()+"/getContentByName/"+self.bookName,{
+					dataType:'html',//服务器返回json格式数据
+					type:'get',//HTTP请求类型
+					timeout:10000,//超时时间设置为10秒；changeTwoDecimal_f
+					async:false,
+					success:function(data){					
+						var table =  document.body.querySelector('.mui-table-view');
+						data = eval ("(" + data + ")");
+						document.getElementById("bookContent").innerHTML = data.sectionContent;
+					},
+					error:function(xhr,type,errorThrown){
+						console.log(type);
+						alert("请检查您的设备是否连接至互联网！");
+					}
+				});
+				
+			});
+		</script>
+		
+		<div class="mui-content">
+			<div  id="totalContent">
+			<p id="bookContent">
+				Loading...
+			</p>
+			</div>
+		</div>
+	</body>
+	<script>
+		var contentDiv = document.getElementById('totalContent');
+		
+		totalContent.addEventListener("swipeleft",function(){
+     		alert("你正在向左滑动");
+		});	
+		//mui.trigger(contentDiv,'swipeleft');
+	</script>
+</html>

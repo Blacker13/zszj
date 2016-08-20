@@ -1,0 +1,95 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../css/mui.min.css" rel="stylesheet" />
+		<script type="text/javascript" src="../js/html5sql.js" ></script>
+		<script type="text/javascript" src="../js/zszj_db.js" ></script>
+		<script type="text/javascript" src="../js/zszj_util.js" ></script>
+	</head>
+
+	<body>
+		<h3 class="mui-title" style="margin-top: -50px;text-align: center;" id="test"></h3>
+		<div class="mui-content">
+
+			<div style="text-align: center;margin-top:50px;">
+				<img src="../images/yangpizhi.png" style="height: 120px;text-align: center;" />
+			</div>
+			<div id="introduce" style="margin: 20px 20px 20px 20px;"></div>
+
+			<button type="button" id="read" class="mui-btn mui-btn-warning mui-btn-outlined" style="margin-left: 50px;">开始阅读</button>
+		</div>
+	</body>
+	<script src="../js/mui.min.js"></script>
+	<script type="text/javascript">
+		mui.init();
+		var book_content = "" ;
+		var name = "";
+		var book_sort = "";
+		mui.plusReady(function() {
+			var self = plus.webview.currentWebview();
+			name = self.bookName;
+			 book_sort = self.bookSort;
+			var h3 = document.getElementById("test");
+			h3.innerHTML = name;
+			openDB();
+			html5sql.process(
+			     [	{
+			         "sql" : "select * from localBooks where bookName = ?;",
+			         "data" : [self.bookName],
+			         "success": function(transaction, results){
+			         	var table =  document.body.querySelector('.mui-table-view');
+			           if(results.rows.length>0){ 
+			           		//alert(results.rows.item(0).bookContent);
+			           		document.getElementById("introduce").innerHTML = results.rows.item(0).bookContent;
+			           		book_content = results.rows.item(0).bookContent;
+			           }else{
+			           	mui.ajax(getServerHost()+"/"+self.bookName,{
+								dataType:'html',//服务器返回json格式数据
+								type:'get',//HTTP请求类型
+								timeout:10000,//超时时间设置为10秒；changeTwoDecimal_f
+								async:false,
+								success:function(data){
+									var table =  document.body.querySelector('.mui-table-view');
+									data = eval ("(" + data + ")");
+									document.getElementById("introduce").innerHTML = data.bookContent;
+									book_content = data.bookContent;
+								},
+								error:function(xhr,type,errorThrown){
+									console.log(type);
+									alert("请检查您的设备是否连接至互联网！");
+								}
+								});
+			           }
+			      	},
+			        }
+			     ],
+			     function(){
+			         console.log("Success Qurey Tables");
+			     },
+			     function(error, statement){
+			         console.error("Error: " + error.message + " when processing " + statement);
+			     }        
+			 );
+			
+			document.getElementById("read").addEventListener('tap', function() {
+				//跳转read.html
+				mui.openWindow({
+					url: 'read.html',
+					id:'read',
+					extras: {
+						bookName: name,
+						bookIntro:book_content,
+						bookSort:book_sort,
+						sort:1,
+					}
+				});
+			});
+
+		});
+	</script>
+
+</html>

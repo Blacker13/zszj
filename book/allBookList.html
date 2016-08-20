@@ -1,0 +1,128 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../css/mui.min.css" rel="stylesheet" />
+		<script type="text/javascript" src="../js/zszj_util.js" ></script>
+		<style>
+			.open{
+				
+			}
+		</style>
+	</head>
+
+	<body>
+		<script src="../js/mui.min.js"></script>
+		<script type="text/javascript">
+			mui.init({  
+		    beforeback: function() {  
+		    //获得列表界面的webview  
+		    var list = plus.webview.currentWebview().opener();  
+		    //触发列表界面的自定义事件（refresh）,从而进行数据刷新  
+		    mui.fire(list, 'refresh');  
+		    //返回true，继续页面关闭逻辑  
+		    return true;  
+		    }  
+		});
+			mui.plusReady(function(){
+				mui.ajax(getServerHost(),{				
+					dataType:'html',//服务器返回json格式数据
+					type:'get',//HTTP请求类型
+					timeout:10000,//超时时间设置为10秒；changeTwoDecimal_f
+					async:false,
+					success:function(data){					
+						var table =  document.body.querySelector('.mui-table-view');
+						data = eval ("(" + data + ")");
+						data = data.jsonStr;
+						data = eval ("(" + data + ")");					
+						for(i=0;i<data.obj.length;++i){
+						var li = document.createElement('li');
+						var bookName = data.obj[i].bookName+"";
+						var bookContent = data.obj[i].bookContent;
+						var bookSort = data.obj[i].bookSort;
+						li.className = 'mui-table-view-cell mui-media';
+						li.innerHTML = '<img class="mui-media-object mui-pull-left" src="../images/yangpizhi.png" onclick="open">'+
+						'<div onclick="openT(\''+bookName+'\',\''+bookContent+'\',\''+bookSort+'\')">'+
+							bookName+
+							'<p>'+bookContent+'</p>'+
+						'</div>';
+					table.appendChild(li);
+					}
+					},
+					error:function(xhr,type,errorThrown){
+						console.log(type);
+						alert("请检查您的设备是否连接至互联网！");
+					}
+				});
+			});
+  		
+		</script>
+		<header class="mui-bar mui-bar-nav">
+			<h1 class="mui-title">所有图书</h1>
+		</header>
+		<div class="mui-content">
+			<div class="mui-input-row mui-search">
+			<input type="search" class="mui-input-clear" placeholder="" id="search_book" onkeyup="enterSearch(event)">
+			</div>
+			<ul class="mui-table-view"  style="margin-top: 0px;">
+			</ul>
+		</div>
+	</body>
+<script>
+
+	function openT(bookName,bookContent,bookSort){
+		//alert(bookSort);
+		 mui.openWindow({	 	
+   		url: 'introduce.html',
+   		createNew:true,
+   		extras:{
+   			bookName:bookName,
+   			bookContent:bookContent,
+   			bookSort:bookSort
+   		} 		
+  });
+	}
+	function enterSearch(e) {
+    if(e.keyCode == 13) {
+        document.getElementById("search_book").blur();
+        document.body.querySelector('.mui-table-view').innerHTML = "";
+       		searchOK(document.getElementById("search_book").value);
+    	}
+	}
+	function searchOK(val){
+		document.body.querySelector('.mui-table-view').innerHTML = "";
+		mui.ajax(getServerHost()+"/searchBook/"+val,{				
+					dataType:'html',//服务器返回json格式数据
+					type:'get',//HTTP请求类型
+					timeout:10000,//超时时间设置为10秒；changeTwoDecimal_f
+					async:false,
+					success:function(data){					
+						var table =  document.body.querySelector('.mui-table-view');
+						data = eval ("(" + data + ")");
+						data = data.jsonStr;
+						data = eval ("(" + data + ")");					
+						for(i=0;i<data.obj.length;++i){
+						var li = document.createElement('li');
+						var bookName = data.obj[i].bookName+"";
+						var bookContent = data.obj[i].bookContent;
+						li.className = 'mui-table-view-cell mui-media';
+						li.onclick = 'openT()';
+						li.innerHTML = '<img class="mui-media-object mui-pull-left" src="../images/yangpizhi.png" onclick="open">'+
+						'<div onclick="openT(\''+bookName+'\',\''+bookContent+'\')">'+
+							bookName+
+							'<p>'+bookContent+'</p>'+
+						'</div>';
+					table.appendChild(li);
+					}
+					},
+					error:function(xhr,type,errorThrown){
+						console.log(type);
+						alert("请检查您的设备是否连接至互联网！");
+					}
+				});
+	}
+</script>
+</html>

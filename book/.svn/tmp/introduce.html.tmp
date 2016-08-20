@@ -1,0 +1,88 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../css/mui.min.css" rel="stylesheet" />
+		<script type="text/javascript" src="../js/zszj_util.js" ></script>
+	</head>
+	<script type="text/javascript">
+
+    		</script>
+	<body>
+
+				<h3 class="mui-title" style="margin-top: -50px;text-align: center;" id="test"></h3>	
+				
+				
+				<div class="mui-content" >
+
+			
+			<div style="text-align: center;margin-top:50px;">
+				<img src="../images/yangpizhi.png" style="height: 120px;margin-right:50px;text-align: center;"/>
+			</div>
+			<div id="introduce"  style="margin: 20px 20px 20px 20px;"></div>
+			
+			<button type="button" id="read" class="mui-btn mui-btn-warning mui-btn-outlined" style="margin-left: 50px;">阅读全文</button>
+		</div>
+	</body>
+			<script src="../js/mui.min.js"></script>
+		<script type="text/javascript">
+			mui.init();
+			mui.plusReady(function(){
+    			var self = plus.webview.currentWebview();
+<<<<<<< .mine
+				var name = self.bookName;
+		/*var name = localStorage.getItem("bookname");*/
+				alert(self.bookName);
+			mui(".mui-title").innerHTML = name;
+    	});
+=======
+				var name = self.bookname;
+				var h3 = document.getElementById("test");
+					h3.innerHTML = name;
+			/*	mui.ajax('',{
+					data:{
+						bookname:name,
+					},
+					datatype:'json',
+					type:'post',
+					timeout:10000,
+					success:function(data){
+						//返回 简介 目录
+						var introduce = data[1];
+					},
+					error:function(xhr,type,errorThrown){
+						//异常处理
+						
+					}
+				});*/
+				var introduce = "电视剧《老九门》正在热播，这部剧是由陈伟霆、张艺兴、赵丽颖等领衔主演的改编自南派三叔所着的同名小说，讲述了1937年7月，"+
+							   "日军发动全面侵华战争，长沙城布防官张启山为破解矿山之谜，求助古玩鉴赏大家二月红，并结下深厚的友谊共同对抗日军的故事。"+
+　　							   "有不少看了原着小说的网友对剧中张启山为什么要灭了老九而感到疑惑，张启山灭了老九门的原因是什么呢？张启山结局怎么样呢？"+
+							   "他死了吗？下面小编就大家来介绍下吧！！";
+				var intro = document.getElementById("introduce");
+				
+				intro.innerHTML = introduce;
+				
+				document.getElementById("read").addEventListener('tap',function(){
+    			
+    			//跳转read.html
+				mui.openWindow({
+   					url: 'index2.html',
+   					extras:{
+   						bookname: name,
+   					}
+    			});
+    		});
+				
+    		});
+    		
+    		
+    		
+    		
+>>>>>>> .r32
+		</script>
+
+</html>

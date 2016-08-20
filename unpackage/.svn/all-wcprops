@@ -1,0 +1,17 @@
+K 25
+svn:wc:ra_dav:version-url
+V 35
+/svn/zszj/!svn/ver/5/ZSZJ/unpackage
+END
+.dependencies
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/zszj/!svn/ver/2/ZSZJ/unpackage/.dependencies
+END
+.confirmed_dependencies
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/zszj/!svn/ver/48/ZSZJ/unpackage/.confirmed_dependencies
+END

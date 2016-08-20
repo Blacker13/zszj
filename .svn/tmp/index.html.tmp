@@ -1,0 +1,213 @@
+<<<<<<< .mine
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <title></title>
+    <script src="js/mui.min.js"></script>
+    <link href="css/mui.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="css/index.css" />
+    <script type="text/javascript" src="js/zszj_util.js" ></script>
+    <script type="text/javascript" src="js/zszj_db.js" ></script>
+    <script type="text/javascript" charset="utf-8">
+      	mui.init();
+      	mui.plusReady(function(){
+				mui.ajax(getServerHost()+'/getBookCategs',{
+					dataType:'html',//服务器返回json格式数据
+					type:'get',//HTTP请求类型
+					timeout:10000,//超时时间设置为10秒；changeTwoDecimal_f
+					async:false,
+					success:function(data){
+						var table =  document.body.querySelector('.mui-table-view');
+						data = eval ("(" + data + ")");
+						data = data.jsonStr;
+						data = eval ("(" + data + ")");					
+						for(i=0;i<data.obj.length;++i){
+						var li = document.createElement('li');
+						var bookcateg = data.obj[i].categName+"";
+						li.className = 'mui-table-view-cell';
+						li.style = 'color:black;width:20px;';
+						li.innerHTML = '<a href="#">'+bookcateg+'</a>';
+						table.appendChild(li);
+					}
+					},
+					error:function(xhr,type,errorThrown){
+						console.log(type);
+						alert("请检查您的设备是否连接至互联网！");
+					}
+				});
+			});
+    </script>
+</head>
+<body>
+			<header class="mui-bar mui-bar-nav">
+				<!--<a class="mui-icon mui-icon-bars mui-pull-left" style="color: #000000;font-size: medium;margin-top: 5px;">志书</a>-->
+				<a href="#popover" id="openPopover" class="mui-icon mui-icon-bars mui-pull-left" style="margin-top:5px;color: #000000;font-size: medium;height:100%;">分类</a>
+				<div id="popover" class="mui-popover">
+				  <ul class="mui-table-view">
+				  </ul>
+				</div>
+				<input type="button" class="mui-btn-nav mui-pull-right" value="书城" style="margin-top: 5px;" id="btn_allBookList"></input>
+				<h1 class="mui-title">掌上志鉴</h1>
+			</header>
+	
+	<div class="mui-content">
+		 <ul class="mui-table-view mui-grid-view mui-grid-9">
+		 	    <li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-4">
+		                    <div><img src="images/yangpizhi.png" style="height: 90px;" onclick="openBook()"></img>
+		                    <div class="mui-media-body">西安地方志1</div></div></li>
+		         <li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-4">
+		                    <span><img src="images/yangpizhi.png" style="height: 90px;"/></span>
+		                    <div class="mui-media-body">西安地方志</div></li>
+		        <li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-4">
+		                    <span><img src="images/yangpizhi.png" style="height: 90px;"/></span>
+		                    <div class="mui-media-body">西安地方志</div></li>
+		        <li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-4">
+		                    <span><img src="images/yangpizhi.png" style="height: 90px;"/></span>
+		                    <div class="mui-media-body">西安地方志</div></li>
+		        <li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-4">
+		                    <span><img src="images/yangpizhi.png" style="height: 90px;"/></span>
+		                    <div class="mui-media-body">西安地方志</div></li>
+		        <li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-4">
+		                    <span><img src="images/yangpizhi.png" style="height: 90px;"/></span>
+		                    <div class="mui-media-body">西安地方志</div></li>
+		        <li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-4">
+		                    <span><img src="images/yangpizhi.png" style="height: 90px;"/></span>
+		                    <div class="mui-media-body">西安地方志</div></li>
+		        <li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-4">
+		                    <span><img src="images/yangpizhi.png" style="height: 90px;"/></span>
+		                    <div class="mui-media-body">西安地方志</div></li>
+		        <li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-4">
+		                    <span><img src="images/yangpizhi.png" style="height: 90px;"/></span>
+		                    <div class="mui-media-body">西安地方志</div></li>
+		 </ul>
+	</div>
+</body>
+<script type="application/javascript">
+	var btn = document.getElementById("btn_allBookList");
+	//监听点击事件
+	btn.addEventListener("tap",function () {
+	  mui.openWindow({
+   		url: 'book/allBookList.html',
+   		extras:{
+   			bookName:"西安年鉴2001"
+   		} 		
+  });
+	});
+	mui.trigger(btn,'tap');
+	function openBook(e){	
+		var target = window.event.target;
+		var book = target.nextElementSibling.innerHTML;
+		localStorage.setItem("bookname",book);
+		mui.openWindow({
+   		url: 'book/index.html',
+   		extras:{
+   			bookName:"西安年鉴2001"
+   		}
+   		
+  });
+	}
+</script>
+=======
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title></title>
+		<script src="js/mui.min.js"></script>
+		<link href="css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" href="css/index.css" />
+		<script type="text/javascript" charset="utf-8">
+			mui.init();
+		</script>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-icon mui-icon-bars mui-pull-left" style="color: #000000;font-size: medium;margin-top: 5px;">志书</a>
+			<input type="button" class="mui-btn-nav mui-pull-right" value="地情" style="margin-top: 5px;"></input>
+			<h1 class="mui-title">掌上志鉴</h1>
+		</header>
+		<div class="mui-slider">
+			<div class="mui-slider-group">
+				<div class="mui-slider-item mui-slider-item-duplicate">
+					<a href="#"><img src="images/3.jpg" /></a>
+				</div>
+				<div class="mui-slider-item">
+					<a href="#"><img src="images/2.jpg" /></a>
+				</div>
+				<div class="mui-slider-item">
+					<a href="#"><img src="images/3.jpg" /></a>
+				</div>
+				<div class="mui-slider-item mui-slider-item-duplicate">
+					<a href="#"><img src="images/2.jpg" /></a>
+				</div>
+
+			</div>
+		</div>
+		<div class="mui-content">
+			<ul class="mui-table-view mui-grid-view mui-grid-9">
+				<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-4">
+					<div><img src="images/yangpizhi.png" style="height: 90px;" onclick="openBook()"></img>
+						<div class="mui-media-body">西安地方志1</div>
+					</div>
+				</li>
+				<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-4">
+					<span><img src="images/yangpizhi.png" style="height: 90px;"/></span>
+					<div class="mui-media-body">西安地方志</div>
+				</li>
+				<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-4">
+					<span><img src="images/yangpizhi.png" style="height: 90px;"/></span>
+					<div class="mui-media-body">西安地方志</div>
+				</li>
+				<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-4">
+					<span><img src="images/yangpizhi.png" style="height: 90px;"/></span>
+					<div class="mui-media-body">西安地方志</div>
+				</li>
+				<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-4">
+					<span><img src="images/yangpizhi.png" style="height: 90px;"/></span>
+					<div class="mui-media-body">西安地方志</div>
+				</li>
+				<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-4">
+					<span><img src="images/yangpizhi.png" style="height: 90px;"/></span>
+					<div class="mui-media-body">西安地方志</div>
+				</li>
+				<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-4">
+					<span><img src="images/yangpizhi.png" style="height: 90px;"/></span>
+					<div class="mui-media-body">西安地方志</div>
+				</li>
+				<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-4">
+					<span><img src="images/yangpizhi.png" style="height: 90px;"/></span>
+					<div class="mui-media-body">西安地方志</div>
+				</li>
+				<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-4">
+					<span><img src="images/yangpizhi.png" style="height: 90px;"/></span>
+					<div class="mui-media-body">西安地方志</div>
+				</li>
+			</ul>
+		</div>
+	</body>
+	<script type="application/javascript">
+		function openBook(e) {
+
+			var target = window.event.target;
+			var book = target.nextElementSibling.innerHTML;
+
+			mui.openWindow({
+				url: 'book/introduce.html',
+				extras: {
+					bookname: book,
+				},
+				show:{
+					autoShow:false
+				}
+
+			});
+		}
+	</script>
+
+>>>>>>> .r32
+</html>

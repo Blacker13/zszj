@@ -1,0 +1,120 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../css/mui.min.css" rel="stylesheet" />
+		<script type="text/javascript" src="../js/zszj_util.js" ></script>
+	</head>
+
+
+<script type="text/javascript">
+function loadApp() {
+	// Create the flipbook
+	var bookContent = "近日，中共中央办公厅印发《关于在全体党员中开展学党章党规、学系列讲话，做合格党员学习教育方案》(以下简称两学一做学习教育)，并发出通知，要求各地区各部门认真贯彻执行。通知指出，开展两学一做学习教育，是落实党章关于加强党员教育管理要求、面向全体党员深化党内教育的重要实践，是推动党内教育从关键少数向广大党员拓展、从集中性教育向经常性教育延伸的重要举措，是加强党的思想政治建设的重要部署。"+
+　　"针对性开展两学一做着力解决五大方面问题"+
+　　"开展两学一做学习教育，要增强针对性，学要带着问题学，做要针对问题改。"+
+　　"着力解决一些党员理想信念模糊动摇的问题，主要是对共产主义缺乏信仰，对中国特色社会主义缺乏信心，精神空虚，推崇西方价值观念，热衷于组织、参加封建迷信活动等;"+
+　　"着力解决一些党员党的意识淡化的问题，主要是看齐意识不强，不守政治纪律政治规矩，在党不言党、不爱党、不护党、不为党，组织纪律散漫，不按规定参加党的组织生活，不按时交纳党费，不完成党组织分配的任务，不按党的组织原则办事等;"+
+　　"着力解决一些党员宗旨观念淡薄的问题，主要是利己主义严重，漠视群众疾苦、与民争利、执法不公、吃拿卡要、假公济私、损害群众利益，在人民群众生命财产安全受到威胁时临危退缩等;"+
+　　"着力解决一些党员精神不振的问题，主要是工作消极懈怠，不作为、不会为、不善为，逃避责任，不起先锋模范作用等;"+
+　　"着力解决一些党员道德行为不端的问题，主要是违反社会公德、职业道德、家庭美德，不注意个人品德，贪图享受、奢侈浪费等。"+
+　　"学习教育内容：学习习近平系列重要讲话"+
+　　"学党章党规。认真学习《中国共产党廉洁自律准则》、《中国共产党纪律处分条例》等党内法规，从周永康、薄熙来、徐才厚、郭伯雄、令计划等违纪违法案件中汲取教训，养成纪律自觉，守住为人、做事的基准和底线。"+
+　　"学系列讲话。认真学习习近平总书记关于改革发展稳定、内政外交国防、治党治国治军的重要思想，认真学习以习近平同志为总书记的党中央治国理政新理念新思想新战略，学习习近平总书记系列重要讲话要同学习马克思列宁主义、毛泽东思想、邓小平理论、三个代表重要思想、科学发展观结合起来，要区别普通党员和党员领导干部，确定学习的重点内容。"+
+　　"做合格党员。着眼党和国家事业的新发展对党员的新要求，坚持以知促行，做讲政治、有信念，讲规矩、有纪律，讲道德、有品行，讲奉献、有作为的合格党员。"+
+　　"学习时间表：党支部每季度开会，七一前后集中上党课"+
+　　"按照三会一课制度，党小组要定期组织党员集中学习;不设党小组的，以党支部为单位集中学习。党支部每季度召开一次全体党员会议，每次围绕一个专题组织讨论。"+
+　　"创新方式讲党课。讲党课一般在党支部范围内进行。七一前后，党支部要结合开展纪念建党95周年活动，集中安排一次党课。召开党支部专题组织生活会。年底前，党支部召开专题组织生活会。"+
+　　"开展民主评议党员。以党支部为单位召开全体党员会议，组织党员开展民主评议。对照党员标准，按照个人自评、党员互评、民主测评、组织评定的程序，对党员进行评议。党员人数较多的党支部，个人自评和党员互评可分党小组进行。结合民主评议，支部班子成员要与每名党员谈心谈话。党支部综合民主评议情况和党员日常表现，确定评议等次，对优秀党员予以表扬;对有不合格表现的党员，按照党章和党内有关规定，区别不同情况，稳妥慎重给予组织处置。";
+		//alert(self.bookName);
+		//alert(plus.storage.getItem(self.bookName));
+		if(plus.storage.getItem(self.bookName) == null){
+			mui.ajax('http://10.150.0.61:8080/criomp/demoController.do?bookContent',{
+					dataType:'html',//服务器返回json格式数据
+					type:'post',//HTTP请求类型
+					timeout:10000,//超时时间设置为10秒；changeTwoDecimal_f
+					async:false,
+					success:function(data){
+						
+						bookContent= data.substring(1,data.length-2);
+						alert(bookContent);
+					},
+					error:function(xhr,type,errorThrown){
+						console.log(type);
+					}
+				});
+			plus.storage.setItem(self.bookName,bookContent);
+		}else{
+			bookContent = new String(plus.storage.getItem(self.bookName));
+			//alert(bookContent);
+		}
+	
+		document.getElementById("content1").innerHTML=bookContent;
+		var bookContentT = "";
+		//alert($("#content1").height());//1302
+		//alert(window.screen.availHeight);//1184
+		document.getElementById("content1").style.height=window.screen.availHeight/3-73;
+		//alert(document.getElementById("content1").offsetHeight);//720
+		while(document.getElementById("content1").offsetHeight<document.getElementById("content1").scrollHeight){
+			 var obj=document.getElementById("content1");
+			bookContentT=obj.innerHTML.substring(0,obj.innerHTML.length-2);
+			document.getElementById("content1").innerHTML = bookContentT;
+		}
+		//console.log(bookContent.substring(bookContentT.length));
+//		if(document.getElementById("content1").offsetHeight>=document.getElementById("content1").scrollHeight){
+//			alert(document.getElementById("content1").offsetHeight);
+//			
+//		}
+	document.getElementById('content2').innerHTML=bookContent.substring(bookContentT.length);
+	
+	$('.flipbook').turn({
+			// Width		
+			// Height
+			height:window.screen.availHeight,
+=======
+	<body>
+		<script src="../js/mui.min.js"></script>
+		<script type="text/javascript">
+			mui.init()
+			var self;
+			var bookContent;
+			mui.plusReady(function(){
+				self = plus.webview.currentWebview();
+				if(plus.storage.getItem(self.bookName) == null){
+					mui.ajax('http://10.150.0.61:8080/criomp/demoController.do?bookContent',{
+					dataType:'html',//服务器返回json格式数据
+					type:'post',//HTTP请求类型
+					timeout:10000,//超时时间设置为10秒；changeTwoDecimal_f
+					async:false,
+					success:function(data){
+						bookContent= data.substring(1,data.length-2);
+					},
+					error:function(xhr,type,errorThrown){
+						console.log(type);
+					}
+				});
+			plus.storage.setItem(self.bookName,bookContent);
+		}else{
+			bookContent = new String(plus.storage.getItem(self.bookName));
+			//alert(bookContent);
+		}
+		document.getElementById("content1").innerHTML=bookContent;
+			});
+		</script>
+		
+		
+		<div class="mui-content">
+			
+			<p id="content1">aaaa</p>
+		</div>
+	</body>
+<<<<<<< .mine
+	
+=======
+>>>>>>> .r20
+
+>>>>>>> .r28
+</html>

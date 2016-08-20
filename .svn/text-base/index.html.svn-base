@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <title></title>
+    <script src="js/mui.min.js"></script>
+    <link href="css/mui.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="css/index.css" />
+    <script type="text/javascript" src="js/zszj_util.js" ></script>
+    <script type="text/javascript" src="js/zszj_db.js" ></script>
+    <script type="text/javascript" src="js/html5sql.js" ></script>
+    <script type="text/javascript" charset="utf-8">
+    var count  = 0;
+      	mui.init({
+      		gestureConfig:{
+			   tap: true, //默认为true
+			   doubletap: true, //默认为false
+			   longtap: true, //默认为false
+			   swipe: true, //默认为true
+			   drag: true, //默认为true
+			   hold:false,//默认为false，不监听
+			   release:false//默认为false，不监听
+			  }
+      	});
+      	mui.plusReady(function(){
+				
+				
+				loadAllBookName();
+				
+			});
+    </script>
+</head>
+<body>
+			<header class="mui-bar mui-bar-nav">
+				<!--<a class="mui-icon mui-icon-bars mui-pull-left" style="color: #000000;font-size: medium;margin-top: 5px;">志书</a>-->
+				<a href="#popover" id="openPopover" class="mui-icon mui-icon-bars mui-pull-left" style="margin-top:5px;color: #000000;font-size: medium;height:100%;">分类</a>
+				<input type="button" class="mui-btn-nav mui-pull-right" value="书城" style="margin-top: 5px;" id="btn_allBookList"></input>
+				<h1 class="mui-title">掌上志鉴</h1>
+			</header>
+			<div id="popover" class="mui-popover">
+				  <ul class="mui-table-view">
+				  	<li class="mui-table-view-cell" style="color:black;width:100%;height: 30px;">
+				  		<a href="#" onclick="categT('allCateg')">全部</a>
+				  	</li>
+				  	<li class="mui-table-view-cell" style="color:black;width:100%;height: 30px;">
+				  		<a href="#" onclick="categT('dictionary')">历史词典</a>
+				  	</li>
+				  	<li class="mui-table-view-cell" style="color:black;width:100%;height: 30px;">
+				  		<a href="#" onclick="categT('year')">年鉴</a>
+				  	</li>
+				  	<li class="mui-table-view-cell" style="color:black;width:100%;height: 30px;">
+				  		<a href="#" onclick="categT('city')">市志</a>
+				  	</li>
+				  	<li class="mui-table-view-cell" style="color:black;width:100%;height: 30px;">
+				  		<a href="#" onclick="categT('county')">县志</a>
+				  	</li>
+				  	<li class="mui-table-view-cell" style="color:black;width:100%;height: 30px;">
+				  		<a href="#" onclick="categT('local')">地情博览</a>
+				  	</li>
+				  		
+				  	<li class="mui-table-view-cell" style="color:black;width:100%;height: 30px;">
+				  		<a href="#" onclick="categT('old')">旧志</a>
+				  	</li>
+				  	<li class="mui-table-view-cell" style="color:black;width:100%;height: 30px;">
+				  		<a href="#" onclick="categT('others')">其他</a>
+				  	</li>
+				  
+				  </ul>
+				</div>
+				
+	<div class="mui-content ">
+		 <ul class="mui-table-view mui-grid-view mui-grid-9" id="bookUI">
+		 	   <!--
+                	作者：ds_cao@163.com
+                	时间：2016-07-30
+                	描述：此处9宫格，显示本地数据库的图书列表
+                -->
+                <!--<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-4">		                    
+		                    </li>-->
+		 </ul>
+	</div>
+</body>
+<script type="application/javascript">
+	var bookName = new Array();
+	var btn = document.getElementById("btn_allBookList");
+	//监听点击事件
+	btn.addEventListener("tap",function () {
+	  mui.openWindow({
+   		url: 'book/allBookList.html',		
+  });
+	});
+	
+//	document.getElementById("confirmBtn").addEventListener('tap', function() {
+//				var btnArray = ['否', '是'];
+//				mui.confirm('MUI是个好框架，确认？', 'Hello MUI', btnArray, function(e) {
+//					if (e.index == 1) {
+//						info.innerText = '你刚确认MUI是个好框架';
+//					} else {
+//						info.innerText = 'MUI没有得到你的认可，继续加油'
+//					}
+//				})
+//			});
+	/**
+	 * 长按图书封面，删除本地缓存图书
+	 */
+	function deleteBook(deleteBookName){
+		var btnArray = ['否', '是'];
+				mui.confirm('确认删除'+deleteBookName+'？', '掌上志鉴', btnArray, function(e) {
+					if (e.index == 1) {
+						var sql = "delete from localBooks where bookName = ?;"
+						simpleSQL(sql,deleteBookName);
+						mui.toast('删除成功');
+						var table =  document.getElementById("bookUI");	
+						loadAllBookName();
+					} else {
+						
+					}
+				});
+	}
+	
+	/**
+	 * 刷新父页面
+	 */
+	window.addEventListener('refresh', function(e) {  
+        	loadAllBookName();  
+        	//document.getElementById('indexHeader').innerHTML = 'Hello World';  
+   		});
+	/**
+	 * 打开图书介绍页面
+	 */
+	function openBook(e){	
+		var target = window.event.target;
+		var book = target.nextElementSibling.innerHTML;
+		localStorage.setItem("bookname",book);
+		mui.openWindow({
+   		url: 'book/introduce.html',
+   		extras:{
+   			bookName:e,
+   		}
+   		
+  });
+	}
+/**
+ * 加载本地数据库图书，填充9宫格
+ */
+function loadAllBookName(){
+	openDB();
+	createTable();
+	 html5sql.process(
+     [	{
+         "sql" : "select * from localBooks;",
+         "success": function(transaction, results){
+         	var table =  document.getElementById("bookUI");
+         	table.innerHTML = "";
+           if(results.rows.length>0){ 
+           	count = results.rows.length;
+           for(var i=0;i<results.rows.length;++i){
+           		var li = document.createElement('li');
+           		//bookName[i] = results.rows.item(i).bookName;
+           		var bname = results.rows.item(i).bookName;
+           		var bsort = results.rows.item(i).bookSort+"";
+           		li.value = bname;
+           		li.className = "mui-table-view-cell  mui-col-xs-4 mui-col-sm-3";
+           		li.innerHTML = '<div><img src="images/yangpizhi.png" style="height: 75px;" onclick="openBook(\''+bname+'\')"  id="'+bname+'"></img>'+
+           		'<div class="mui-content-padded" style="font-size: smaller;color: #000000;">'+bname+'</div></div>';
+           		table.appendChild(li);
+           		
+           		}
+           var li = document.createElement('li');
+           li.className = "mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3";
+           		li.innerHTML = '<a class="mui-icon mui-icon-plus" style="color: #000000;margin-top: 20%;" onclick="openStore()"></a>';
+           		table.appendChild(li);
+           	for(var j=0;j<results.rows.length;++j){
+           		var bnaame = results.rows.item(j).bookName;
+           		document.getElementById(bnaame).addEventListener("longtap",function (e) {
+           			var deleteBookName = this.id;
+					 deleteBook(deleteBookName);
+					});
+           		}	
+           		
+           }else{
+           	  var li = document.createElement('li');
+           		li.className = "mui-table-view-cell mui-col mui-media mui-col-xs-3 mui-col-sm-3";
+           		li.innerHTML = '<a class="mui-icon mui-icon-plus" style="color: #000000;margin-top: 20%;" onclick="openStore()"></a>';
+           		table.appendChild(li);
+           }
+      	},
+        }
+     ],
+     function(){
+         console.log("Success Qurey Tables");
+     },
+     function(error, statement){
+         console.error("Error: " + error.message + " when processing " + statement);
+     }        
+ ); 
+}
+function openStore(){
+	mui.openWindow({
+   		url: 'book/allBookList.html',		
+  });
+}
+function categT(bookkSort){
+	var sql = "select * from localBooks where bookSort = ?;";
+	if(bookkSort == 'allCateg'){
+		loadAllBookName();
+	}else{
+	html5sql.process(
+     [	{
+         "sql" : sql,
+         "data" : [bookkSort],
+         "success": function(transaction, results){
+         	var table =  document.getElementById("bookUI");
+         	table.innerHTML = "";
+           if(results.rows.length>0){ 
+           	count = results.rows.length;
+           for(var i=0;i<results.rows.length;++i){
+           		var li = document.createElement('li');
+           		//bookName[i] = results.rows.item(i).bookName;
+           		var bname = results.rows.item(i).bookName;
+           		var bsort = results.rows.item(i).bookSort+"";
+           		li.value = bname;
+           		li.className = "mui-table-view-cell  mui-col-xs-4 mui-col-sm-3";
+           		li.innerHTML = '<div><img src="images/yangpizhi.png" style="height: 75px;" onclick="openBook(\''+bname+'\')"  id="'+bname+'"></img>'+
+           		'<div class="mui-content-padded" style="font-size: smaller;color: #000000;">'+bname+'</div></div>';
+           		table.appendChild(li);
+           		
+           		}
+           var li = document.createElement('li');
+           li.className = "mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3";
+           		li.innerHTML = '<a class="mui-icon mui-icon-plus" style="color: #000000;margin-top: 20%;" onclick="openStore()"></a>';
+           		table.appendChild(li);
+           	for(var j=0;j<results.rows.length;++j){
+           		var bnaame = results.rows.item(j).bookName;
+           		document.getElementById(bnaame).addEventListener("longtap",function (e) {
+           			var deleteBookName = this.id;
+					 deleteBook(deleteBookName);
+					});
+           		}	
+           		
+           }else{
+           	  var li = document.createElement('li');
+           		li.className = "mui-table-view-cell mui-col mui-media mui-col-xs-3 mui-col-sm-3";
+           		li.innerHTML = '<a class="mui-icon mui-icon-plus" style="color: #000000;margin-top: 20%;" onclick="openStore()"></a>';
+           		table.appendChild(li);
+           }
+      	},
+        }
+     ],
+     function(){
+         console.log("Success Qurey Tables");
+     },
+     function(error, statement){
+         console.error("Error: " + error.message + " when processing " + statement);
+     }        
+ ); 
+ }
+ document.getElementById("popover").style.display = "none";
+}
+
+</script>
+</html>

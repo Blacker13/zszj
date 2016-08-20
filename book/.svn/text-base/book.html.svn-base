@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<script type="text/javascript" src="../extras/jquery.min.1.7.js"></script>
+<script type="text/javascript" src="../extras/modernizr.2.5.3.min.js"></script>
+<link href="../booklet/jquery.booklet.latest.css" type="text/css" rel="stylesheet" media="screen, projection, tv" />
+<link rel="stylesheet" href="../css/mui.min.css">
+		<title></title>
+	</head>
+	<body>
+<ul class="mui-table-view">
+	<li class="mui-table-view-cell">
+		<a class="mui-navigate-right">Item 1</a>
+	</li>
+	<li class="mui-table-view-cell">
+		<a class="mui-navigate-right">Item 2</a>
+	</li>
+	<li class="mui-table-view-cell">
+		<a class="mui-navigate-right">Item 3</a>
+	</li>
+</ul>
+	</body>
+</html>

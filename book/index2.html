@@ -1,0 +1,84 @@
+<!doctype html>
+<!--[if lt IE 7 ]> <html lang="en" class="ie6"> <![endif]-->
+<!--[if IE 7 ]>    <html lang="en" class="ie7"> <![endif]-->
+<!--[if IE 8 ]>    <html lang="en" class="ie8"> <![endif]-->
+<!--[if IE 9 ]>    <html lang="en" class="ie9"> <![endif]-->
+<!--[if !IE]><!--> <html lang="en"> <!--<![endif]-->
+<head>
+ <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />   
+ <meta http-equiv="X-UA-Compatible" content="IE=edge" />   
+ <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0" />
+ <meta name="apple-mobile-web-app-capable" content="yes" />   <meta name="apple-mobile-web-app-status-bar-style" content="black" /> 
+ <meta name="format-detection" content="telephone=no" />  
+<script type="text/javascript" src="../extras/jquery.min.1.7.js"></script>
+<script type="text/javascript" src="../extras/modernizr.2.5.3.min.js"></script>
+</head>
+<body onload="hehe()">
+
+<div class="flipbook-viewport">
+	<div class="container">
+		<div class="flipbook" id="flipbook">
+			<div>
+				haahhahaahhaahah 
+			</div>
+			<div>aaaaa</div>
+			
+		</div>
+		
+		<button type="button" id="btnAddContent">Add Page</button>
+	</div>
+</div>
+
+
+<script type="text/javascript">
+$('#btnAddContent').click(function() {
+    addContent();
+});
+function addContent() {
+     var element = '<p>SomeContent</p><a href="#">Go To Page 1</a>';
+    var pageCount = $('#flipbook').turn('pages') * 1;
+    $('#flipbook').turn('addPage', element, pageCount+1)
+    .turn('pages', $('#flipbook').turn('pages'));
+    alert("#flipbook has " + $("#flipbook").turn("pages") + " pages");
+
+}
+function loadApp() {
+	addContent() ;
+	alert(1245);
+	// Create the flipbook
+
+	$('.flipbook').turn({
+			// Width
+
+			height:window.screen.availHeight-500,
+
+			// Elevation
+			elevation: 50,
+			
+			display: 'single',
+			
+			// Enable gradients
+
+			gradients: true,
+			
+			// Auto center this flipbook
+
+			autoCenter: true
+
+	});
+}
+
+// Load the HTML4 version if there's not CSS transform
+
+yepnope({
+	test : Modernizr.csstransforms,
+	yep: ['../lib/turn.js'],
+	nope: ['../lib/turn.html4.min.js'],
+	both: ['css/basic.css'],
+	complete: loadApp
+});
+
+</script>
+
+</body>
+</html>

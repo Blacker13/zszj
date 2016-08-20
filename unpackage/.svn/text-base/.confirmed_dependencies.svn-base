@@ -1,0 +1,120 @@
+{
+	"index.html": {
+		"resources": [
+			"js/mui.min.js",
+			"css/mui.min.css",
+			"css/index.css",
+			"fonts/mui.ttf",
+			"images/yangpizhi.png",
+			"js/zszj_util.js",
+			"js/zszj_db.js",
+			"js/html5sql.js"
+		],
+		"refer": [
+			"book/index.html",
+			"book/index2.html",
+			"book/introduce.html",
+			"book/allBookList.html"
+		]
+	},
+	"book/index.html": {
+		"resources": [
+			"extras/jquery.min.1.7.js",
+			"extras/modernizr.2.5.3.min.js",
+			"css/mui.min.css",
+			"js/mui.min.js",
+			"book/css/basic.css",
+			"lib/turn.js",
+			"booklet/jquery.booklet.latest.css"
+		],
+		"refer": []
+	},
+	"book/index2.html": {
+		"resources": [
+			"extras/jquery.min.1.7.js",
+			"book/css/basic.css",
+			"extras/modernizr.2.5.3.min.js",
+			"lib/turn.js"
+		],
+		"refer": []
+	},
+	"book/introduce.html": {
+		"resources": [
+			"js/mui.min.js",
+			"css/mui.min.css",
+			"js/zszj_util.js",
+			"images/yangpizhi.png",
+			"js/html5sql.js",
+			"js/zszj_db.js"
+		],
+		"refer": [
+			"book/readExam.html",
+			"book/read.html"
+		]
+	},
+	"book/allBookList.html": {
+		"resources": [
+			"js/mui.min.js",
+			"css/mui.min.css",
+			"images/yangpizhi.png",
+			"js/zszj_util.js",
+			"fonts/mui.ttf"
+		],
+		"refer": [
+			"book/readExam.html",
+			"book/read.html",
+			"book/introduce.html"
+		]
+	},
+	"book/readExam.html": {
+		"resources": [
+			"js/zszj_db.js",
+			"js/mui.min.js",
+			"css/mui.min.css",
+			"js/html5sql.js",
+			"js/zszj_util.js"
+		],
+		"refer": []
+	},
+	"book/read.html": {
+		"resources": [
+			"js/mui.min.js",
+			"js/zszj_util.js",
+			"js/html5sql.js",
+			"images/yangpizhi.png",
+			"js/zszj_db.js",
+			"css/mui.min.css",
+			"fonts/mui.ttf",
+			"js/zszj_loalstore.js",
+			"js/common.js"
+		],
+		"refer": [
+			"book/categ.html"
+		]
+	},
+	"book/categ.html": {
+		"resources": [
+			"js/mui.min.js",
+			"fonts/mui.ttf",
+			"css/mui.min.css",
+			"js/zszj_loalstore.js",
+			"js/zszj_util.js",
+			"js/html5sql.js",
+			"js/zszj_db.js"
+		],
+		"refer": [
+			"book/read2.html",
+			"book/read.html"
+		]
+	},
+	"book/read2.html": {
+		"resources": [
+			"js/zszj_loalstore.js",
+			"js/mui.min.js",
+			"js/zszj_util.js",
+			"js/html5sql.js",
+			"js/zszj_db.js",
+			"css/mui.min.css"
+		]
+	}
+}
